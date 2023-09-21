@@ -1,8 +1,18 @@
 import os
+import requests
 import shutil
 from pptx import Presentation
 import openpyxl
 from datetime import datetime
+
+def get_current_version():
+    # Az alkalmazás beépített verziószámának lekérése
+    return "1.0"  # Példaként verzió 1.0
+
+def get_latest_version():
+    # A legfrissebb verziószám letöltése a megbízható forrásból (pl. egy szerverről)
+    latest_version = requests.get("https://github.com/akosblack/ppt_script/blob/main/latest_version.txt").text
+    return int(latest_version)
 
 def replace_text_in_ppt(pptx_file, keywords, replacements):
     # Másolja az eredeti fájlt az "output" mappába
@@ -66,7 +76,7 @@ if __name__ == "__main__":
         # Kiírja, hogy végzett
         print("Az adatok kicserelése befejezve. Nyomj meg egy billentyűt a kilépéshez...")
         input()
-    except Exception as e:
+    except Exception as e:        
         print("Hiba történt:", e)
         print("Nyomj meg egy billentyűt a kilépéshez...")
         input()
