@@ -11,8 +11,8 @@ How its working:
   | keyword1 | data1 |
   | -------- | ----- |
   | keyword2 | data2 |
-  | -------- | ----- |
   | keyword3 | data3 |
+
   etc.
 
   The ppt input file should be a pptx file with the following structure:
