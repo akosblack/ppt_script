@@ -1,4 +1,4 @@
-# ppt_script
+# PPT Script
 A script that replace placeholders in a ppt* file form a xls* file.
 
 How its working:
@@ -17,6 +17,9 @@ How its working:
 
   The ppt input file should be a pptx file with the following structure:
   - Where you want to replace the data you should write the keyword in. The keyword should be the same as in the excel file. Like this: "<keyword1>"
+
+## Output
+  The output file will be in the output directory. The name of the file will be the same as the input file name but with a timestamp at the end. The new file should now contain the replaced data.
 
 ## How to create an executeable file from project:
   - Install pyinstaller with command
