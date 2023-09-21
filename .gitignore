@@ -1,0 +1,10 @@
+
+*.zip
+*.pyc
+*.log
+build/
+dist/
+output/
+script.spec
+*.xml
+*.xlsx
