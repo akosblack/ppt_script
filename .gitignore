@@ -8,3 +8,5 @@ output/
 script.spec
 *.xml
 *.xlsx
+*.png
+*.pptx

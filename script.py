@@ -7,21 +7,22 @@ from datetime import datetime
 
 def get_current_version():
     # Az alkalmazás beépített verziószámának lekérése
-    return "1.0"  # Példaként verzió 1.0
+    return "1.0"
 
 def get_latest_version():
     # A legfrissebb verziószám letöltése a megbízható forrásból (pl. egy szerverről)
-    latest_version = requests.get("https://github.com/akosblack/ppt_script/blob/main/latest_version.txt").text
-    return int(latest_version)
+    version_data = requests.get("https://raw.githubusercontent.com/akosblack/ppt_script/main/latest_version.txt").text
+    return str(version_data)
 
 def replace_text_in_ppt(pptx_file, keywords, replacements):
+    print("Az adatok kicserélése folyamatban...")
     # Másolja az eredeti fájlt az "output" mappába
     output_folder = "output"
     os.makedirs(output_folder, exist_ok=True)
     time = datetime.now().strftime("%Y-%m-%d")
     pptx_file_output = os.path.join(output_folder, pptx_file.replace('input\\',''))
     pptx_file_output = pptx_file_output.replace('.pptx', f'_{time}.pptx')
-    print(pptx_file_output)
+    # print(pptx_file_output)
     shutil.copy(pptx_file, pptx_file_output)
     # Nyissa meg a másolt fájlt
     prs = Presentation(pptx_file_output)
@@ -47,6 +48,11 @@ def read_input(excel_input):
     return keywords, replacements
 
 if __name__ == "__main__":
+    # print(get_current_version(), get_latest_version())
+    if get_current_version() != get_latest_version():
+        print("Frissítés elérhető. Kérlek használd a közös mappában lévő exe-t...")
+        input()
+        exit(1)
     try:      
         input_folder = "input"
         os.makedirs(input_folder, exist_ok=True)  
@@ -69,8 +75,8 @@ if __name__ == "__main__":
             raise Exception("Nem található .ppt vagy .pptx fájl az input mappában.")
 
         keywords, replacements = read_input(excel_input)
-        print(keywords)
-        print(replacements)
+        # print(keywords)
+        # print(replacements)
         new_pptx_file = replace_text_in_ppt(template_pptx, keywords, replacements)
         os.system(f"start {new_pptx_file}")
         # Kiírja, hogy végzett
