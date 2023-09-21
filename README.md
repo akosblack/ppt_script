@@ -9,7 +9,9 @@ How its working:
 ## Input
   The excel input file should be a one sheet file with the following structure:
   | keyword1 | data1 |
+  | -------- | ----- |
   | keyword2 | data2 |
+  | -------- | ----- |
   | keyword3 | data3 |
   etc.
 
