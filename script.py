@@ -1,9 +1,12 @@
 import os
 import requests
 import shutil
-from pptx import Presentation
 import openpyxl
 from datetime import datetime
+from pptx import Presentation
+from pptx.enum.chart import XL_CHART_TYPE
+from pptx.chart.data import ChartData
+from pptx.util import Inches
 
 def get_current_version():
     # Az alkalmazás beépített verziószámának lekérése
@@ -28,24 +31,43 @@ def replace_text_in_ppt(pptx_file, keywords, replacements):
     prs = Presentation(pptx_file_output)
     for slide in prs.slides:
         for shape in slide.shapes:
+            if shape.has_chart:
+                    chart = shape.chart
+                    update_chart(chart)
             if hasattr(shape, "text"):
                 for keyword, replacement in zip(keywords, replacements):
                     shape.text = shape.text.replace(keyword, replacement)
     prs.save(pptx_file_output)
     return pptx_file_output
 
+def update_chart(chart):
+    print(chart.chart_type)
+    chart.chart_title.text_frame.text = 'asd'
+
+    chart_data = ChartData()
+    chart_data.categories = 'Foobar', 'Barbaz', 'Bazfoo'
+    chart_data.add_series('New Series 2', (2.3, 3.4, 4.5))
+    chart_data.add_series('New Series 3', (8.9, 9.1, 1.2))
+
+    chart.replace_data(chart_data)
+
 def read_input(excel_input):
     keywords = []
     replacements = []
+    chart_datas = []
     # Nyissa meg az xlsx fájlt
     workbook = openpyxl.load_workbook(excel_input)
     worksheet = workbook.active
     # Olvassa be a tartalmat soronként
     for row in worksheet.iter_rows(values_only=True):
-        keyword, replacement = row
-        keywords.append(str(keyword))
-        replacements.append(str(replacement))
-    return keywords, replacements
+        if 'kat' in row[0]:
+            kat, chart_data = row
+            chart_datas.append(chart_data)
+        else:
+            keyword, replacement = row        
+            keywords.append(str(keyword))
+            replacements.append(str(replacement))
+    return keywords, replacements, chart_datas
 
 if __name__ == "__main__":
     # print(get_current_version(), get_latest_version())
@@ -74,7 +96,8 @@ if __name__ == "__main__":
         if template_pptx is None:
             raise Exception("Nem található .ppt vagy .pptx fájl az input mappában.")
 
-        keywords, replacements = read_input(excel_input)
+        keywords, replacements, chart_data = read_input(excel_input)
+        print(f'chart_data: {chart_data}')
         # print(keywords)
         # print(replacements)
         new_pptx_file = replace_text_in_ppt(template_pptx, keywords, replacements)
